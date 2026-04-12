@@ -1,0 +1,15 @@
+<div class="modal-overlay" id="mortgage-modal">
+  <div class="modal-box">
+    <button class="modal-close">✕</button>
+    <p class="modal-date">Jan 2025 – May 2025</p>
+    <h2 class="modal-title">when the data tells a story about inequality</h2>
+    <p class="modal-org">Equitable Mortgage Lending Project · Machine Learning</p>
+    <div class="modal-body">
+      <p>This was one of the first ML projects I did where I was able to gain real insight out of the work. I was taking my first machine learning classes, and this felt like a good way to use what I was learning in a way that mattered. The mortgage industry has a discrimination problem. It's not a secret — studies have documented it for decades. But data can make the abstract concrete, and that's what drew me to this project.</p>
+      <p>We worked with HMDA data: the Home Mortgage Disclosure Act dataset, a massive public record of loan applications across the US. Over 180,000 records. Every one of them represents a real person trying to buy a home — and a system deciding whether they could.</p>
+      <p>The first challenge was the data itself. 180K records sounds like a lot until you look at how unevenly different groups are represented. I applied stratified sampling to make sure our training splits actually reflected the demographic diversity in the dataset — otherwise, the model would learn the bias in the data rather than anything useful about lending risk.</p>
+      <p>From there, I engineered features and built out three classifiers: Logistic Regression, Naive Bayes, and SGD. We landed at 73% accuracy on loan approval prediction, but accuracy was almost beside the point. The more interesting questions were about where the models were wrong — and whether their errors were distributed equitably across race, income, and geography.</p>
+      <p>This project sits at an intersection I care deeply about: AI, fairness, and systems that have historically excluded people. It's one thing to build a model that performs well on a benchmark. It's another to ask what that model would actually do in the world — and who gets hurt when it gets it wrong.</p>
+    </div>
+  </div>
+</div>
