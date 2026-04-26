@@ -5,39 +5,27 @@
     <h2 class="modal-title">you are your data: building a mirror that shows you what algorithms see</h2>
     <p class="modal-org">Data Twin · ML Project</p>
     <div class="modal-body">
-      <p>Every day, you leave a trail. A search here, a video watched there, a hashtag liked at 2am. Individually unremarkable. But aggregated, sequenced, and analyzed — they become a surprisingly accurate portrait of who you are and what you'll do next. The problem is that portrait is invisible to you and legible to everyone else.</p>
+      <p>Every search, every video, every scroll at 2am is a data point. Together they're a pretty accurate model of you — what you care about, what you'll do next. You never get to see that model. Companies do.</p>
 
-      <p>Data Twin flips that. It takes your Google Takeout and TikTok data exports, runs them through the same kind of behavioral analysis recommendation engines use, and hands you back the result: your topics, your patterns, your persona, and your profilability score — how predictable your future behavior is based on your past. No tracking. No server-side storage. Just you and your data.</p>
+      <p>Data Twin lets you run the same analysis yourself. Upload your Google Takeout or TikTok export and it classifies your activity, computes behavioral metrics, and gives you a profilability score — how predictable your behavior is based on your history. Nothing is stored. Everything runs in memory and gets discarded after the response.</p>
 
-      <h3>The Technical Architecture</h3>
+      <h3>How it works</h3>
 
-      <p>The system is a React frontend, FastAPI backend, and Python ML pipeline. All analysis is stateless — processed in memory at request time and discarded after the response. Nothing persists.</p>
+      <p>React frontend, FastAPI backend, Python ML pipeline. Each item in your export gets classified into one of eight topics — tech, fashion, politics, finance, self-improvement, entertainment, health, travel — using a fine-tuned DistilBERT model, with a zero-shot BART fallback when needed.</p>
 
-      <p><strong>Data Ingestion.</strong> Google Takeout's MyActivity.json wraps activity in strings like "Searched for machine learning tutorial" — the parser strips prefixes to extract clean query text. TikTok's export omits video titles entirely, so the pipeline pulls signal from search queries, hashtags, and comments instead. Both parsers output a flat list of text items with timestamps.</p>
+      <p>The pipeline then computes metrics on your sequence: how diverse your topics are, how stable your attention is, how often you switch, how deep you go. A first-order Markov chain trained on 80% of your history predicts the remaining 20% — that accuracy is your profilability score. It's simple on purpose. If even this model can call your next topic 70% of the time, that's worth knowing.</p>
 
-      <p><strong>Topic Classification.</strong> Each item is classified into one of eight topics: technology, fashion, politics, finance, self-improvement, entertainment, health, travel. The primary classifier is a fine-tuned DistilBERT model (~67MB). When unavailable, the system falls back to BART-large-MNLI zero-shot classification — slower and larger, but requires no training data.</p>
+      <p>Persona assignment uses k-means clustering on those metrics. Eight archetypes, each seeded with a hand-crafted centroid so the clusters stay interpretable: The Deep Diver, The Butterfly, The Algorithm's Darling, The Scholar, The Trend Chaser, The Ghost, The Loyalist, The Consumer.</p>
 
-      <p><strong>Behavioral Metrics.</strong> The pipeline computes mathematical properties of your activity sequence: Diversity Score (Shannon entropy of topic distribution), Stability Score (entropy of topic transition matrix), Curiosity Score (fraction of items introducing a new topic), Rabbit Hole Depth (longest consecutive single-topic run), Algorithmic Drift (Jensen-Shannon divergence between your first and second half of activity), and Commercial Intensity (keyword heuristic for purchase-intent searches).</p>
+      <h3>The part I think about</h3>
 
-      <p><strong>Sequence Predictability.</strong> A first-order Markov chain trains on the first 80% of your topic sequence, then predicts the remaining 20%. That accuracy is your profilability score. It's deliberately simple — if even this model can predict your next topic 70% of the time, that's meaningful. If it can't beat random chance, that's meaningful too.</p>
+      <p>Data Twin uses the same techniques as the systems it's making visible. The difference is you see the result and nothing gets kept. Whether that's enough is a real question.</p>
 
-      <p><strong>Persona Assignment.</strong> K-means clustering on a 7-dimensional behavioral feature vector assigns you one of eight archetypes: The Deep Diver (high rabbit-hole depth, low diversity), The Butterfly (high fragmentation, high diversity), The Algorithm's Darling (high stability, high commercial signal), The Scholar (high curiosity), The Trend Chaser (high drift), and others. Cluster centroids are seeded by hand to encode prior knowledge about each archetype, then refined on synthetic profiles. Each assignment includes a confidence score; low confidence surfaces a secondary persona.</p>
+      <p>High profilability isn't inherently bad — a focused researcher will score high too. But the same number in different hands is a targeting signal. The data doesn't change. The context does.</p>
 
-      <h3>Privacy</h3>
+      <p>The model also can't tell you why you did anything. It doesn't know the Bali search was a fantasy. What it gives you is a compression — accurate in some ways, missing most of the point.</p>
 
-      <p>The /analyze endpoint receives your data, processes it in-memory, and discards it when the response is sent. No database, no logging, no stored profiles. Both Google Takeout and TikTok exports are user-initiated — the platforms never receive a request from Data Twin. There is no API integration, no OAuth, no ongoing account access. Data Twin is strictly read-and-discard.</p>
-
-      <h3>The Harder Questions</h3>
-
-      <p>Data Twin uses the same techniques as surveillance capitalism to show you what surveillance capitalism sees. The difference is intent, transparency, and control — you choose what to upload, you get the result, and the data is gone. No one else can act on it. That distinction matters. Whether it's sufficient is a harder question.</p>
-
-      <p>The profilability score is the most ethically loaded part. High profilability isn't inherently bad — a researcher who reads deeply in one field will score high, and that reflects focus, not vulnerability. But the same number in the hands of an advertiser or insurer is a targeting vector. The data is neutral. The ethics live in the use.</p>
-
-      <p>The model also can't detect irony. It doesn't know you searched "cheap flights to Bali" as a fantasy. It can't tell work research from late-night spiraling. Behavioral profiles capture what you did, not why. The persona it assigns you is a compression — one true thing, from a narrow slice of your digital life. It is not you.</p>
-
-      <p>Awareness isn't nothing, though. Understanding that your attention is patterned, that those patterns are measurable, that measurement creates a double that persists after you close the tab — that's a foundation for more informed consent and more intentional behavior. Data Twin gives you a few minutes of seeing yourself the way the algorithm does. What you do with that is up to you.</p>
-
-      <p><em>Built with FastAPI, React, DistilBERT, and a first-order Markov chain. Privacy-first by design. The code is open source and the data never leaves your session.</em></p>
+      <p><em>Built with FastAPI, React, DistilBERT, and a Markov chain. Open source. Data never leaves your session.</em></p>
     </div>
   </div>
 </div>
